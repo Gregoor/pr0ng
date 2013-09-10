@@ -1,8 +1,9 @@
 import "dart:math";
 
 import "ball.dart";
+import "item.dart";
 import "player.dart";
-import "rectangle.dart";
+import "shapes.dart";
 import "vector.dart";
 
 class Level {
@@ -12,6 +13,8 @@ class Level {
 	List<Rectangle> rectangles;
 
 	List<Player> players;
+
+	List<Item> items = [];
 
 	Player p1, p2;
 
@@ -25,13 +28,13 @@ class Level {
 
 	Level() {
 		rectangles = [
-	new Rectangle(new Vector(WIDTH / 2, 5), WIDTH, 10),
-	new Rectangle(new Vector(WIDTH / 2, HEIGHT - 5), WIDTH, 10)
-	];
+			new Rectangle(new Vector(WIDTH / 2, 5), WIDTH, 10),
+			new Rectangle(new Vector(WIDTH / 2, HEIGHT - 5), WIDTH, 10)
+		];
 
 		num offset = .05;
-		p1 = new Player(new Vector(WIDTH * offset, HEIGHT * .5), this);
-		p2 = new Player(new Vector(WIDTH * (1 - offset), HEIGHT * .5), this);
+		p1 = new Player(this, new Vector(WIDTH * offset, HEIGHT * .5));
+		p2 = new Player(this, new Vector(WIDTH * (1 - offset), HEIGHT * .5));
 		players = [p1, p2];
 
 		spawnBall();
@@ -39,6 +42,7 @@ class Level {
 
 	act(int dt) {
 		players.forEach((Player player) => player.act(dt));
+		items.forEach((Item item) => item.act(dt));
 		ball.act(dt);
 
 		num x = ball.pos.x, r = ball.body.radius;
@@ -73,7 +77,9 @@ class Level {
 		} while(!isInRange(atan2(x, y), [[7 * PI / 4, 2 * PI], [0, PI / 4], [3 * PI / 4, 5 * PI / 4]]));
 		if ((lastScorer == null && r.nextBool()) || lastScorer == p1) x = -1;
 
-		ball = new Ball(new Vector(WIDTH / 2, HEIGHT / 2), new Vector(x, y).normalize().scale(.4), this);
+		ball = new Ball(this, centre, new Vector(x, y).normalize().scale(.4));
 	}
+
+	get centre => new Vector(WIDTH / 2, HEIGHT / 2);
 
 }

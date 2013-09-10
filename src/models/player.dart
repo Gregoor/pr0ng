@@ -1,7 +1,7 @@
 import "dart:math";
 import "level.dart";
 import "vector.dart";
-import "rectangle.dart";
+import "shapes.dart";
 import "physactor.dart";
 
 class Player extends PhysActor {
@@ -16,7 +16,7 @@ class Player extends PhysActor {
 
 	int points = 0;
 
-	Player(Vector pos, this.level) : body = new Rectangle(pos, START_WIDTH, START_HEIGHT);
+	Player(this.level, Vector pos) : body = new Rectangle(pos, START_WIDTH, START_HEIGHT);
 
 	act(int dt) {
 		if (accel.length > 0 && accel.normalize() == vel.normalize().scale(-1)) {
