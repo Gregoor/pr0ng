@@ -44,7 +44,7 @@ class Vector {
 
 	get hashCode => x + y;
 
-	String toString() => "$x / $y";
+	String toString() => "($x / $y)";
 
 	int distanceTo(Vector v) => (this - v).length;
 

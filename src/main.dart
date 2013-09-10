@@ -5,7 +5,7 @@ import "dart:math";
 import "controllers/player_controller.dart";
 import "models/level.dart";
 import "models/player.dart";
-import "models/rectangle.dart";
+import "models/shapes.dart";
 import "models/vector.dart";
 
 
@@ -124,7 +124,7 @@ render(int dt) {
 	}
 	renderScore();
 
-	renderDebug(dt);
+//	renderDebug(dt);
 }
 
 //param -> ctx

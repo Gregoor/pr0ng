@@ -1,8 +1,7 @@
 import "dart:math";
 
-import "circle.dart";
 import "physactor.dart";
-import "rectangle.dart";
+import "shapes.dart";
 import "vector.dart";
 
 class Ball extends PhysActor {
@@ -13,7 +12,7 @@ class Ball extends PhysActor {
 
 	Vector vel;
 
-	Ball(Vector pos, this.vel, this.level) : body = new Circle(pos, 15);
+	Ball(this.level, Vector pos, this.vel) : body = new Circle(pos, 15);
 
 	act(int dt) {
 		super.act(dt, resolve: (Vector newPos) {
@@ -23,19 +22,35 @@ class Ball extends PhysActor {
 			}
 
 			Rectangle tempRect = level.rectangles.firstWhere(collides, orElse: () => null);
-			bool player = false;
+			Player tempPlayer;
 			if (tempRect == null) {
-				Player tempPlayer = level.players.firstWhere((Player player) => collides(player.body), orElse: () => null);
+				tempPlayer = level.players.firstWhere((Player player) => collides(player.body), orElse: () => null);
 				if (tempPlayer != null) tempRect = tempPlayer.body;
-				player = true;
 			}
 
 			if (tempRect != null) {
+				Line m2m = new Line(body.pos, tempRect.pos);
+				num smallestScalar;
+				Side appendentSide;
+				tempRect.lines.forEach((Side s, Line l) {
+					num scalar = m2m.intersection(l);
+					if (smallestScalar == null || scalar <= smallestScalar) {
+						smallestScalar = scalar;
+						appendentSide = s;
+					}
+				});
+
 				Vector reboundVel = new Vector.clone(vel);
-				if (player) {
-					reboundVel.x *= -1.1;
-				} else reboundVel.y *= -1;
+				if ([Side.LEFT, Side.RIGHT].contains(appendentSide)) reboundVel.y *= -1;
+				else reboundVel.x *= -1;
 				vel = reboundVel;
+
+
+				if (tempPlayer != null && tempPlayer.vel != new Vector.zero()) {
+					print(tempPlayer.vel);
+					vel += (vel - tempPlayer.vel).scale(.1);
+				}
+
 				return true;
 			}
 

@@ -1,5 +1,5 @@
 import "dart:math";
-import "shape.dart";
+import 'shapes.dart';
 import "vector.dart";
 
 abstract class PhysActor {
@@ -17,7 +17,7 @@ abstract class PhysActor {
 		vel += accel.scale(dt);
 		accel = new Vector.zero();
 		Vector newPos = pos;
-		boolean collision = false;
+		bool collision = false;
 		const int STEP_SIZE = 1;
 		for (num i = 0; i < dt; i+=STEP_SIZE) {
 			pos = newPos;
